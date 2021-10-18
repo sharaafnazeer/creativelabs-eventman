@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Event Man</string>
+    <string name="login_text">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_new_account">Create New Account</string>
+</resources>
