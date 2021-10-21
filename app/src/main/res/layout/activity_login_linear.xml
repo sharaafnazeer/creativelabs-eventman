@@ -36,7 +36,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/username"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:autofillHints="" />
 
 
         <EditText
@@ -46,11 +47,12 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:autofillHints="" />
 
         <Button
             android:layout_marginTop="16dp"
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_in" />
@@ -65,10 +67,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:gravity="bottom"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
         <Button
             android:id="@+id/btnCreateNewAccount"
             android:layout_width="match_parent"

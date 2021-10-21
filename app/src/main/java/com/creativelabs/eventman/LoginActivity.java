@@ -5,13 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,10 +27,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+//        setContentView(R.layout.activity_login_linear); // 1 . Linear Layout
+        setContentView(R.layout.activity_login_constraint);
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnRegister);
         btnNewAccount = findViewById(R.id.btnCreateNewAccount);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
@@ -51,6 +49,11 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(homeIntent);
                 finish();
             }
+        });
+
+        btnNewAccount.setOnClickListener(v -> {
+            Intent registerIntent = new Intent(this, RegisterActivity.class);
+            startActivity(registerIntent);
         });
     }
 
