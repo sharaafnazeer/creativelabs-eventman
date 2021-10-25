@@ -11,4 +11,5 @@
     <string name="first_name">First Name</string>
     <string name="email">Email</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="this_is_a_image_for_login">This is a image for login</string>
 </resources>
