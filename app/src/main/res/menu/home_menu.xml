@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/add_event"
+        android:id="@+id/menuAddEvent"
+        android:icon="@drawable/ic_baseline_add_24"
+        app:showAsAction="always"/>
+
+    <item android:title="@string/about_us"
+        android:id="@+id/menuAboutUs"/>
+    <item android:title="@string/help"
+        android:id="@+id/menuHelp"/>
+    <item android:title="@string/logout"
+        android:id="@+id/menuLogout"
+        android:icon="@drawable/ic_baseline_power_settings_new_24"/>
+</menu>

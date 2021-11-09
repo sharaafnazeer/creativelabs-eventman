@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.creativelabs.eventman.classes.SharedPref;
+
 public class LoginActivity extends AppCompatActivity {
 
     String userName = "admin";
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             String pass = etPassword.getText().toString();
 
             if (validate(uname, pass)) {
+                SharedPref.setIsLoggedIn(this, true);
                 Intent homeIntent = new Intent(this, HomeActivity.class);
                 startActivity(homeIntent);
                 finish();
@@ -70,4 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
 }

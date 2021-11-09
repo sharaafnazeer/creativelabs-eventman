@@ -12,4 +12,8 @@
     <string name="email">Email</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="this_is_a_image_for_login">This is a image for login</string>
+    <string name="about_us">About Us</string>
+    <string name="help">Help</string>
+    <string name="logout">Logout</string>
+    <string name="add_event">Add Event</string>
 </resources>
