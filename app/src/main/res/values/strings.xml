@@ -16,4 +16,6 @@
     <string name="help">Help</string>
     <string name="logout">Logout</string>
     <string name="add_event">Add Event</string>
+    <string name="event_name">Event Name</string>
+    <string name="description">Description</string>
 </resources>

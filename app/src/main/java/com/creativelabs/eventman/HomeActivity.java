@@ -51,19 +51,19 @@ public class HomeActivity extends AppCompatActivity {
 
         checkLoggedIn();
 
-        listItems.add(new EventItem("Lecture", "Abc", new Date(), "10:00"));
-        listItems.add(new EventItem("Wedding", "Abcdef", new Date(), "20:00"));
-        listItems.add(new EventItem("Classes", "Abdfac", new Date(), "12:00"));
-        listItems.add(new EventItem("Webinar", "Abdfc", new Date(), "10:00"));
-        listItems.add(new EventItem("Farewell", "Affbc", new Date(), "11:00"));
-        listItems.add(new EventItem("Engagement", "Amlmbc", new Date(), "15:00"));
+        listItems.add(new EventItem("Lecture", "Abc", "", "10:00"));
+        listItems.add(new EventItem("Wedding", "Abcdef", "", "20:00"));
+        listItems.add(new EventItem("Classes", "Abdfac", "", "12:00"));
+        listItems.add(new EventItem("Webinar", "Abdfc", "", "10:00"));
+        listItems.add(new EventItem("Farewell", "Affbc", "", "11:00"));
+        listItems.add(new EventItem("Engagement", "Amlmbc", "", "15:00"));
 
         adapter = new EventRecyclerViewAdapter("List");
         rvEvents.setLayoutManager(new LinearLayoutManager(this));
 
         rvEvents.setAdapter(adapter);
 
-        listItems.add(new EventItem("Test", "Amlmbc", new Date(), "15:00"));
+        listItems.add(new EventItem("Test", "Amlmbc", "", "15:00"));
         adapter.setListItems(listItems);
         adapter.notifyDataSetChanged();
 
@@ -159,6 +159,9 @@ public class HomeActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menuHelp) {
 
             Toast.makeText(this, "Help", Toast.LENGTH_LONG).show();
+        } else if (item.getItemId() == R.id.menuAddEvent) {
+            Intent eventIntent = new Intent(this, EventActivity.class);
+            startActivity(eventIntent);
         }
         return true;
     }

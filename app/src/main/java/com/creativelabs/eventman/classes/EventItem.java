@@ -6,14 +6,19 @@ public class EventItem {
 
     private String eventName;
     private String eventDesc;
-    private Date startDate;
+    private String startDate;
     private String startTime;
+    private int id;
 
-    public EventItem(String eventName, String eventDesc, Date startDate, String startTime) {
+    public EventItem(String eventName, String eventDesc, String startDate, String startTime) {
         this.eventName = eventName;
         this.eventDesc = eventDesc;
         this.startDate = startDate;
         this.startTime = startTime;
+    }
+
+    public EventItem() {
+
     }
 
     public String getEventName() {
@@ -32,11 +37,11 @@ public class EventItem {
         this.eventDesc = eventDesc;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -46,5 +51,13 @@ public class EventItem {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
