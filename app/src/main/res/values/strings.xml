@@ -18,4 +18,5 @@
     <string name="add_event">Add Event</string>
     <string name="event_name">Event Name</string>
     <string name="description">Description</string>
+    <string name="search_event">Search Event</string>
 </resources>

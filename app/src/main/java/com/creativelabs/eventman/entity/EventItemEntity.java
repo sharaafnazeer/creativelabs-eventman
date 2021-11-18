@@ -24,11 +24,11 @@ public final class EventItemEntity implements BaseColumns {
 
     public static final String CREATE_SQL_QUERY = "CREATE TABLE " +
             TABLE_NAME + "(" +
-            ID + "INTEGER PRIMARY KEY, " +
-            NAME + "TEXT NOT NULL, " +
-            DESCRIPTION + "TEXT NULL, " +
-            START_DATE + "TEXT NOT NULL, " +
-            START_TIME + "TEXT NOT NULL " +
+            ID + " INTEGER PRIMARY KEY, " +
+            NAME + " TEXT NOT NULL, " +
+            DESCRIPTION + " TEXT NULL, " +
+            START_DATE + " TEXT NOT NULL, " +
+            START_TIME + " TEXT NOT NULL " +
             ")";
 
     public static final String DELETE_SQL_QUERY = "DROP TABLE IF EXISTS " + TABLE_NAME;
@@ -90,6 +90,77 @@ public final class EventItemEntity implements BaseColumns {
 
         List<EventItem> itemList = new ArrayList<>();
 
+        if (cursor != null && cursor.isBeforeFirst()) {
+            while (cursor.moveToNext()) {
+                EventItem item = new EventItem();
+                item.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ID)));
+                item.setEventName(cursor.getString(cursor.getColumnIndexOrThrow(NAME)));
+                item.setEventDesc(cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION)));
+                item.setStartDate(cursor.getString(cursor.getColumnIndexOrThrow(START_DATE)));
+                item.setStartTime(cursor.getString(cursor.getColumnIndexOrThrow(START_TIME)));
+                itemList.add(item);
+            }
+        }
+        return itemList;
+    }
+
+    public EventItem getById(long id) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = {
+                ID,
+                NAME,
+                DESCRIPTION,
+                START_DATE,
+                START_TIME
+        };
+
+        String selection = ID + " = ? ";
+        String[] selectionArgs = {id + ""};
+
+        Cursor cursor = db.query(TABLE_NAME,
+                projection,
+                selection, selectionArgs, null, null, null);
+
+        EventItem item = null;
+        if (cursor != null && cursor.isBeforeFirst()) {
+            while (cursor.moveToNext()) {
+                item = new EventItem();
+                item.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ID)));
+                item.setEventName(cursor.getString(cursor.getColumnIndexOrThrow(NAME)));
+                item.setEventDesc(cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION)));
+                item.setStartDate(cursor.getString(cursor.getColumnIndexOrThrow(START_DATE)));
+                item.setStartTime(cursor.getString(cursor.getColumnIndexOrThrow(START_TIME)));
+            }
+        }
+        return item;
+    }
+
+    public long delete(long id) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String selection = ID + " = ? ";
+        String[] selectionArgs = {id + ""};
+
+        return db.delete(TABLE_NAME, selection, selectionArgs);
+    }
+
+    public List<EventItem> search(String query) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = {
+                ID,
+                NAME,
+                DESCRIPTION,
+                START_DATE,
+                START_TIME
+        };
+
+        String selection = NAME + " LIKE ? ";
+        String[] selectionArgs = {query + "%"};
+
+        Cursor cursor = db.query(TABLE_NAME,
+                projection,
+                selection, selectionArgs, null, null, null);
+
+        List<EventItem> itemList = new ArrayList<>();
         if (cursor != null && cursor.isBeforeFirst()) {
             while (cursor.moveToNext()) {
                 EventItem item = new EventItem();

@@ -10,9 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.creativelabs.eventman.EventActivity;
 import com.creativelabs.eventman.R;
 import com.creativelabs.eventman.RegisterActivity;
 import com.creativelabs.eventman.classes.EventItem;
+import com.creativelabs.eventman.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +62,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.getCvRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(v.getContext(), RegisterActivity.class);
-                v.getContext().startActivity(i);
+                Intent eventActivity = new Intent(v.getContext(), EventActivity.class);
+                eventActivity.putExtra(Constants.EVENT_ID, item.getId());
+                v.getContext().startActivity(eventActivity);
             }
         });
     }

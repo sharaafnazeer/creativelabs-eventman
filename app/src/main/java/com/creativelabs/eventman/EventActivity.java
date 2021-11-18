@@ -2,6 +2,7 @@ package com.creativelabs.eventman;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,25 +22,39 @@ import android.widget.Toast;
 
 import com.creativelabs.eventman.classes.EventItem;
 import com.creativelabs.eventman.entity.EventItemEntity;
+import com.creativelabs.eventman.utils.Constants;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class EventActivity extends AppCompatActivity {
 
     public static TextInputEditText etEventName, etDescription, etStartTime, etStartDate;
-    TextInputLayout tilEventName, tilDescription, tilStartDate, tilStartTime;
-    Button btnSave;
+    TextInputLayout tilEventName, tilStartDate, tilStartTime;
+    Button btnSave, btnDelete;
     private final static String DATE_FRAGMENT = "date_fragment";
     private final static String TIME_FRAGMENT = "time_fragment";
     EventItemEntity entity;
+    int eventId = 0;
+    EventItem eventItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+        Toolbar myToolbar = findViewById(R.id.eventToolbar);
+        setSupportActionBar(myToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Add Event");
+
+        eventId = getIntent().getIntExtra(Constants.EVENT_ID, 0);
+
+        if (eventId > 0) {
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Update Event");
+        }
 
         etEventName = findViewById(R.id.tieEventName);
         etDescription = findViewById(R.id.tieDescription);
@@ -49,6 +66,7 @@ public class EventActivity extends AppCompatActivity {
         tilStartTime = findViewById(R.id.tilStartTime);
 
         btnSave = findViewById(R.id.btnSave);
+        btnDelete = findViewById(R.id.btnDelete);
 
         etStartDate.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -56,6 +74,7 @@ public class EventActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "Focused", Toast.LENGTH_LONG).show();
             }
         });
+
 
         etStartDate.setOnClickListener(v -> {
             showDatePickerDialog(v);
@@ -81,8 +100,37 @@ public class EventActivity extends AppCompatActivity {
                         etStartDate.getText().toString(),
                         etStartTime.getText().toString());
 
-                entity.create(item);
+                entity = new EventItemEntity(this);
+
+                if (eventId > 0) {
+                    entity.update(item, eventId);
+                } else {
+                    entity.create(item);
+                }
+
+                finish();
             }
+        });
+
+        btnDelete.setVisibility(View.INVISIBLE);
+
+        // if event id > 0 edit mode
+        // else create mode-
+
+        if (eventId > 0) {
+            eventItem = getEventItem(eventId);
+
+            etEventName.setText(eventItem.getEventName());
+            etDescription.setText(eventItem.getEventDesc());
+            etStartDate.setText(eventItem.getStartDate());
+            etStartTime.setText(eventItem.getStartTime());
+
+            btnDelete.setVisibility(View.VISIBLE);
+        }
+
+        btnDelete.setOnClickListener(v -> {
+            deleteEvent(eventId);
+            finish();
         });
     }
 
@@ -119,6 +167,13 @@ public class EventActivity extends AppCompatActivity {
         tilEventName.setError(null);
         tilStartDate.setError(null);
         tilStartTime.setError(null);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.event_menu, menu);
+        return true;
     }
 
     public static class TimePickerFragment extends DialogFragment
@@ -165,5 +220,15 @@ public class EventActivity extends AppCompatActivity {
             String dateString = year + "-" + (month + 1) + "-" + day;
             etStartDate.setText(dateString);
         }
+    }
+
+    private EventItem getEventItem (long id) {
+        entity = new EventItemEntity(this);
+        return entity.getById(id);
+    }
+
+    private long deleteEvent(long id) {
+        entity = new EventItemEntity(this);
+        return entity.delete(id);
     }
 }

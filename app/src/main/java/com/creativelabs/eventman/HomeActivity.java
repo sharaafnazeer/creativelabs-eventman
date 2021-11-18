@@ -3,8 +3,10 @@ package com.creativelabs.eventman;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,12 +17,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.creativelabs.eventman.adapters.EventRecyclerViewAdapter;
 import com.creativelabs.eventman.classes.EventItem;
 import com.creativelabs.eventman.classes.SharedPref;
+import com.creativelabs.eventman.entity.EventItemEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,10 +37,13 @@ public class HomeActivity extends AppCompatActivity {
     EventRecyclerViewAdapter adapter;
 
     Button btnView;
+    TextView tvNoEvents;
 
     AlertDialog.Builder builder;
 
     //https://abhiandroid.com/ui/gridview
+
+    EventItemEntity entity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +55,18 @@ public class HomeActivity extends AppCompatActivity {
 
         rvEvents = findViewById(R.id.rvEvents);
         btnView = findViewById(R.id.btnView);
+        tvNoEvents = findViewById(R.id.tvNoItems);
         btnView.setText("Grid");
 
         checkLoggedIn();
-
-        listItems.add(new EventItem("Lecture", "Abc", "", "10:00"));
-        listItems.add(new EventItem("Wedding", "Abcdef", "", "20:00"));
-        listItems.add(new EventItem("Classes", "Abdfac", "", "12:00"));
-        listItems.add(new EventItem("Webinar", "Abdfc", "", "10:00"));
-        listItems.add(new EventItem("Farewell", "Affbc", "", "11:00"));
-        listItems.add(new EventItem("Engagement", "Amlmbc", "", "15:00"));
 
         adapter = new EventRecyclerViewAdapter("List");
         rvEvents.setLayoutManager(new LinearLayoutManager(this));
 
         rvEvents.setAdapter(adapter);
 
-        listItems.add(new EventItem("Test", "Amlmbc", "", "15:00"));
+        listItems = getAllEvents();
+
         adapter.setListItems(listItems);
         adapter.notifyDataSetChanged();
 
@@ -79,8 +82,20 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rvEvents);
 
         Log.d("TRACER", "onCreate");
+    }
+
+    private void handleNoMessage() {
+        if (listItems.size() == 0) {
+            tvNoEvents.setVisibility(View.VISIBLE);
+            btnView.setVisibility(View.GONE);
+        } else {
+            tvNoEvents.setVisibility(View.GONE);
+            btnView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -93,6 +108,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("TRACER", "onResume");
+        listItems = getAllEvents();
+        adapter.setListItems(listItems);
+        adapter.notifyDataSetChanged();
+
+        handleNoMessage();
     }
 
     @Override
@@ -122,6 +142,32 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home_menu, menu);
+
+        MenuItem search = menu.findItem(R.id.menuSearch);
+        SearchView searchView = (SearchView) search.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                adapter.setListItems(getAllEvents());
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<EventItem> items = null;
+                if (newText.length() > 0) {
+                    items = search(newText);
+                } else {
+                    items = getAllEvents();
+                }
+                adapter.setListItems(items);
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -162,12 +208,13 @@ public class HomeActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menuAddEvent) {
             Intent eventIntent = new Intent(this, EventActivity.class);
             startActivity(eventIntent);
+        } else if (item.getItemId() == R.id.menuSearch) {
         }
         return true;
     }
 
     private void checkLoggedIn() {
-        boolean loggedIn =  SharedPref.getIsLoggedIn(this);
+        boolean loggedIn = SharedPref.getIsLoggedIn(this);
         if (!loggedIn) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
@@ -180,5 +227,39 @@ public class HomeActivity extends AppCompatActivity {
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
+    }
+
+    private List<EventItem> getAllEvents() {
+        entity = new EventItemEntity(this);
+        return entity.getAll();
+    }
+
+    private List<EventItem> search(String query) {
+        entity = new EventItemEntity(this);
+        return entity.search(query);
+    }
+
+    ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            EventItem item = listItems.get(viewHolder.getAdapterPosition());
+            deleteEvent(item.getId());
+
+            listItems = getAllEvents();
+            adapter.setListItems(listItems);
+            adapter.notifyDataSetChanged();
+
+            handleNoMessage();
+
+        }
+    };
+    private long deleteEvent(long id) {
+        entity = new EventItemEntity(this);
+        return entity.delete(id);
     }
 }
