@@ -6,6 +6,7 @@ public class Constants {
     public static final int PRIVATE_MODE = 0;
     public static final String PREF_NAME = "eventMan";
     public static final String IS_LOGGED_IN = "is_logged_in";
+    public static final String IS_SERVICE = "is_service";
 
     // DB vars
     public final static int VERSION = 1;

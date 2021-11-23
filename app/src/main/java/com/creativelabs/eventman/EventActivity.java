@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -192,10 +193,10 @@ public class EventActivity extends AppCompatActivity {
                     true);
         }
 
+        @SuppressLint("DefaultLocale")
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            String timeString = hourOfDay + ":" + minute;
-            etStartTime.setText(timeString);
+            etStartTime.setText(String.format("%02d:%02d", hourOfDay, minute));
         }
     }
 
@@ -215,10 +216,10 @@ public class EventActivity extends AppCompatActivity {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
+        @SuppressLint("DefaultLocale")
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            String dateString = year + "-" + (month + 1) + "-" + day;
-            etStartDate.setText(dateString);
+            etStartDate.setText(String.format("%02d-%02d-%02d", year, (month + 1), day));
         }
     }
 

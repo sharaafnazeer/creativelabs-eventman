@@ -19,4 +19,6 @@
     <string name="event_name">Event Name</string>
     <string name="description">Description</string>
     <string name="search_event">Search Event</string>
+    <string name="channel_name">notification</string>
+    <string name="channel_description">notification</string>
 </resources>

@@ -174,4 +174,36 @@ public final class EventItemEntity implements BaseColumns {
         }
         return itemList;
     }
+
+    public List<EventItem> getEventsByDte(String query) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] projection = {
+                ID,
+                NAME,
+                DESCRIPTION,
+                START_DATE,
+                START_TIME
+        };
+
+        String selection = START_DATE + " = ? ";
+        String[] selectionArgs = {query};
+
+        Cursor cursor = db.query(TABLE_NAME,
+                projection,
+                selection, selectionArgs, null, null, null);
+
+        List<EventItem> itemList = new ArrayList<>();
+        if (cursor != null && cursor.isBeforeFirst()) {
+            while (cursor.moveToNext()) {
+                EventItem item = new EventItem();
+                item.setId(cursor.getInt(cursor.getColumnIndexOrThrow(ID)));
+                item.setEventName(cursor.getString(cursor.getColumnIndexOrThrow(NAME)));
+                item.setEventDesc(cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION)));
+                item.setStartDate(cursor.getString(cursor.getColumnIndexOrThrow(START_DATE)));
+                item.setStartTime(cursor.getString(cursor.getColumnIndexOrThrow(START_TIME)));
+                itemList.add(item);
+            }
+        }
+        return itemList;
+    }
 }

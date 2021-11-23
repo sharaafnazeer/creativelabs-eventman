@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.creativelabs.eventman">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_baseline_account_circle_24"
@@ -19,6 +21,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity"></activity>
+
+        <service android:name=".services.HelloService" />
+
+
+
     </application>
 
 </manifest>

@@ -22,4 +22,12 @@ public class SharedPref {
         return getPreferences(context).getBoolean(Constants.IS_LOGGED_IN, false);
     }
 
+    public static void setServiceStarted(Context context, boolean isLoggedIn) {
+        getPreferences(context).edit().putBoolean(Constants.IS_SERVICE, isLoggedIn).apply();
+    }
+
+    public static boolean getServiceStarted(Context context) {
+        return getPreferences(context).getBoolean(Constants.IS_SERVICE, false);
+    }
+
 }

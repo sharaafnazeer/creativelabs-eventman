@@ -26,6 +26,7 @@ import com.creativelabs.eventman.adapters.EventRecyclerViewAdapter;
 import com.creativelabs.eventman.classes.EventItem;
 import com.creativelabs.eventman.classes.SharedPref;
 import com.creativelabs.eventman.entity.EventItemEntity;
+import com.creativelabs.eventman.services.HelloService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     List<EventItem> listItems = new ArrayList<>();
     EventRecyclerViewAdapter adapter;
 
-    Button btnView;
+    Button btnView, btnService;
     TextView tvNoEvents;
 
     AlertDialog.Builder builder;
@@ -86,6 +87,23 @@ public class HomeActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(rvEvents);
 
         Log.d("TRACER", "onCreate");
+
+
+        btnService = findViewById(R.id.btnServiceTest);
+
+//        btnService.setOnClickListener(v-> {
+//            Intent intent = new Intent(this, HelloService.class);
+//            boolean serviceRun = SharedPref.getServiceStarted(this);
+//            if (!serviceRun) {
+//                startService(intent);
+//            } else {
+//                stopService(intent);
+//            }
+//            SharedPref.setServiceStarted(this, !serviceRun);
+//        });
+
+        Intent intent = new Intent(this, HelloService.class);
+        startService(intent);
     }
 
     private void handleNoMessage() {
