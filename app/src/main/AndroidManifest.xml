@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_baseline_account_circle_24"
@@ -23,6 +26,8 @@
         <activity android:name=".LoginActivity"></activity>
 
         <service android:name=".services.HelloService" />
+        <service android:name=".services.ForegroundService" />
+        <service android:name=".services.BoundService" />
 
 
 

@@ -10,9 +10,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +31,8 @@ import com.creativelabs.eventman.adapters.EventRecyclerViewAdapter;
 import com.creativelabs.eventman.classes.EventItem;
 import com.creativelabs.eventman.classes.SharedPref;
 import com.creativelabs.eventman.entity.EventItemEntity;
+import com.creativelabs.eventman.services.BoundService;
+import com.creativelabs.eventman.services.ForegroundService;
 import com.creativelabs.eventman.services.HelloService;
 
 import java.util.ArrayList;
@@ -45,6 +52,28 @@ public class HomeActivity extends AppCompatActivity {
     //https://abhiandroid.com/ui/gridview
 
     EventItemEntity entity;
+
+    BoundService _service;
+    boolean bound = false;
+
+    ProgressDialog progressDialog;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d("CONNECTION", "CONNECTED");
+            BoundService.LocalBinder binder = (BoundService.LocalBinder) service;
+            _service = binder.getService();
+            bound = true;
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d("CONNECTION", "DISCONNECTED");
+            bound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +117,13 @@ public class HomeActivity extends AppCompatActivity {
 
         Log.d("TRACER", "onCreate");
 
+        progressDialog =  new ProgressDialog(this);
+
 
         btnService = findViewById(R.id.btnServiceTest);
 
-//        btnService.setOnClickListener(v-> {
-//            Intent intent = new Intent(this, HelloService.class);
+        btnService.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, ForegroundService.class);
 //            boolean serviceRun = SharedPref.getServiceStarted(this);
 //            if (!serviceRun) {
 //                startService(intent);
@@ -100,10 +131,20 @@ public class HomeActivity extends AppCompatActivity {
 //                stopService(intent);
 //            }
 //            SharedPref.setServiceStarted(this, !serviceRun);
-//        });
 
-        Intent intent = new Intent(this, HelloService.class);
-        startService(intent);
+            if (bound) {
+                int num = _service.getRandomNumber();
+                Toast.makeText(this, "NUMBER : " + num, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        Intent intent = new Intent(this, HelloService.class);
+//        startService(intent);
+
+        progressDialog.setCancelable(true);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("I am fetching your data");
+        progressDialog.show();
     }
 
     private void handleNoMessage() {
@@ -120,6 +161,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d("TRACER", "onStart");
+
+        // Bind to LocalService
+        Intent intent = new Intent(this, BoundService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -143,6 +188,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.d("TRACER", "onStop");
+        unbindService(connection);
+        bound = false;
     }
 
     @Override
@@ -276,6 +323,7 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     };
+
     private long deleteEvent(long id) {
         entity = new EventItemEntity(this);
         return entity.delete(id);
