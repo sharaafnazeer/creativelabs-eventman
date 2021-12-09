@@ -3,9 +3,7 @@
     package="com.creativelabs.eventman">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -13,24 +11,27 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_baseline_account_circle_24"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EventMan">
-        <activity android:name=".EventActivity"></activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".HomeActivity">
+        android:theme="@style/Theme.EventMan"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MovieActivity"
+            android:label="@string/title_activity_movie"
+            android:theme="@style/Theme.EventMan.NoActionBar"></activity>
+        <activity android:name=".MoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".EventActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".LoginActivity" />
 
         <service android:name=".services.HelloService" />
         <service android:name=".services.ForegroundService" />
         <service android:name=".services.BoundService" />
-
-
-
     </application>
 
 </manifest>
