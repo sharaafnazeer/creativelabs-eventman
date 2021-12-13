@@ -14,19 +14,31 @@
         android:theme="@style/Theme.EventMan"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MovieActivity"
-            android:label="@string/title_activity_movie"
-            android:theme="@style/Theme.EventMan.NoActionBar"></activity>
-        <activity android:name=".MoviesActivity">
+            android:name=".TabbedActivity"
+            android:label="@string/title_activity_tabbed"
+            android:theme="@style/Theme.EventMan.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".FragmentActivity"
+            android:label="@string/title_activity_my_fragment">
+
+        </activity>
+        <activity
+            android:name=".MyFragmentActivity"
+            android:label="@string/title_activity_my_fragment"></activity>
+        <activity
+            android:name=".MovieActivity"
+            android:label="@string/title_activity_movie"
+            android:theme="@style/Theme.EventMan.NoActionBar" />
+        <activity android:name=".MoviesActivity"></activity>
         <activity android:name=".EventActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".HomeActivity" />
         <activity android:name=".LoginActivity" />
 
         <service android:name=".services.HelloService" />
